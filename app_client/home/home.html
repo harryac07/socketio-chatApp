@@ -1,0 +1,55 @@
+
+<!-- Users -->
+<div class="col-sm-3">
+
+    <h2 class="text-center">Online Users</h1>
+
+    	<div>
+    		<h4 id="users"></h4>
+    	</div>
+    <hr>
+
+</div>
+
+<!-- chat contents -->
+<div class="col-sm-9 col-xs-12">
+	<i class="fa fa-bell" style="font-size:25px;float:right" id="notification-bell" aria-hidden="true"></i>
+	<i id="notification" style=""></i>
+	<br>
+	<div id="chat" class="well">
+		<div id="content">
+			<!-- message come here -->
+		</div>
+		<br><br>
+		<form id="chat-form" role="form" >
+		    <div class="form-group">
+		    	<input type="text" class="form-control" id="text" placeholder="Enter text" autocomplete="off">
+		    </div>
+		  	<button type="submit" id="submit" class="btn btn-default">Submit</button>
+		</form>
+	</div>
+</div>
+
+ <div class="otherarea">
+  <div id="chat-box" class='chat-box' style="display:none;">
+      <div id="nouser-box" class="nouser-box">
+        <div id="chat-header" style="padding:20px 20px 1px 20px">
+            <h4 style="display:inline;color:black">Chat</h4>
+            <button style="display:inline;color:black" type="button" class="close" id="chat-close">&times;</button>
+        </div>
+        
+
+        <div id="chat-content" style="color:black" class="well">
+                
+                <!-- messages comes here -->
+            
+        </div>
+        <form id="private-chat-form" role="form" style="bottom:0">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="text2" placeholder="Enter text" autocomplete="off" style="display:inline;border:1px solid black;width:300px;margin-left:10px">
+                </div>
+        </form>
+    </div>
+  </div>
+</div>
+  
