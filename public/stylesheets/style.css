@@ -46,6 +46,7 @@ hr{
     justify-content: flex-end;
 }*/
 
+
 #chat-box{
   border: 2px solid gray;
   max-height:400px;
@@ -91,5 +92,71 @@ hr{
     padding:20px;
     border:2px solid gray;
   }
+}
+
+
+
+#chat1 {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 100px;
+    height: auto;
+}
+#chat1 .user {
+    border: 1px solid #333;
+    background: #fff;
+    width: 280px;
+    height: 100%;
+    float: left;
+    margin-right: 5px;
+}
+.user header {
+    position: relative;
+    background: #4b67a8;
+    border: 1px solid #2e4588;
+}
+.user header .status {
+    position: absolute;
+    top: 36%;
+    left: 10px;
+    width: 8px;
+    height: 8px;
+    -webkit-border-radius: 4px; 
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    background: green;
+}
+.user header .header-text {
+    color: #fff;
+    font-weight: bold;
+    padding: 8px;
+    margin: 0 0 0 15px;
+    font-size: 12px;
+    text-shadow: 0 -1px rgba(0, 0, 0, .25);
+}
+.user header .close { 
+    position: absolute;
+    right: 5px;
+    top: 7px;
+    color: #fff;
+}
+.message-area {
+    background: #fff;
+    height: 250px;
+    padding: 5px;
+    color: #333;
+    overflow: scroll;
+}
+.user .input-area {
+    border-top: 1px solid #333;
+    padding: 3px;
+}
+.user .input-area input {
+    padding: 5px;
+    width: 100%;
+    font-size: 12px;
+    border: none;
+    outline: none;
 }
 
