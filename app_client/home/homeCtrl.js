@@ -8,7 +8,7 @@ function homeCtrl($scope, $routeParams, $location, auth) { // service as paramet
 	/* Socket starts here */
 	var socket = io('http://localhost:3000');
 
-	// check if user log in and only perform chat
+	// check if user log in and only start chat
 	if (window.localStorage['user-token']) {
 		var user = JSON.parse(window.atob(window.localStorage['user-token'].split('.')[1])).name;
 		// var room=user+Date.now(); // make unique room using date
@@ -40,15 +40,27 @@ function homeCtrl($scope, $routeParams, $location, auth) { // service as paramet
 
 			/* private message */
 			setTimeout(function() {
+				/* Highlight current loggedIn user */
+				var required_user = new RegExp(user,"g");
+				console.log(user);
 
-				$.toUser = ""; // global variable to store userto name(user whom message is to sent)
+				$('#users p:contains("'+user+'")').each(function() {
+					$(this).html(
+						$(this).html().replace(user, '<span class="highlight">'+user+'</span>')
+					);
+				});
+				// $('#users p').css("color","red");
+
+				var div_header_names = []; // array containing name of chat-div header name
+				var targetUser = "";
+				$.toUser = ""; // global variable to store userto name(user whom message is to be sent)
 				$('#users p').click(function(e) {
 
-					e.preventDefault();
+
 
 					$.toUser = $(this).text();
 
-					var targetUser = $.toUser.replace(/\s+/g, '');
+					targetUser = $.toUser.replace(/\s+/g, '');
 					// console.log($.toUser);
 
 					$('.header-text').attr('id', targetUser + '1');
@@ -56,28 +68,44 @@ function homeCtrl($scope, $routeParams, $location, auth) { // service as paramet
 					$('#' + targetUser + '1').html($.toUser);
 					var toAppend = $(".user").html();
 					// console.log(toAppend);
-					$('#chat1').append("<div class='user open' id='" + targetUser + "'>" + toAppend + "</div>");
+					console.log(div_header_names);
+					console.log(targetUser);
+					if (jQuery.inArray(targetUser, div_header_names) != -1) {
+						//do nothing if the user found in div_header_names
 
+					} else {
+						div_header_names.push(targetUser); // push the name to array so that div dont open with that name again
+						/* User cannot chat himself and cannot open chat div also for now: */
+						if (user.replace(/\s+/g, '') != targetUser) {
+							$('#chat1').append("<div class='user open' id='" + targetUser + "'>" + toAppend + "</div>");
+						}
 
+					}
 
 				}); /* click ends here */
 
-				/* need maintenance*/
-				$('div').on('click','#close',function() {
-					
-					$('.user').hide();
+
+				$('div').on('click', '#close', function() {
+					var header_name = $(this).parent().find('.header-text').text();
+					var index = div_header_names.indexOf(header_name);
+					div_header_names.splice(index, 1); // remove the div_header_name from array to prevent repeated
+					$(this).parent().parent().hide();
+
 				});
 
 
-			}, 200);
+			});
 			$("div").on("focus", "#text2", function(event) {
 				/* gets the first ancestor element that matches the given selector '.user'*/
-				var toUser = ($(this).parent().closest('.user').find('.header-text').text());
+
+
 
 				$("div").on("keydown", "#text2", function(e) {
+					var toUser = ($(this).parent().closest('.user').find('.header-text').text());
+					console.log("to user : " + toUser);
 					if (e.which == 13) {
 						e.preventDefault();
-						// console.log(user + ' : touser :' + toUser + ',,,' + $(this).val());
+						console.log(user + ' : touser :' + toUser + ',,,' + $(this).val());
 						if ($(this).val() != '' || null) {
 							socket.emit('private message', user, toUser, $(this).val()); // emit for private chat
 							$(this).val('');
@@ -123,8 +151,20 @@ function homeCtrl($scope, $routeParams, $location, auth) { // service as paramet
 			var timestamp = moment.utc(msg.date); //
 			$('#' + targetUser + ' .message-area,#' + senderUser + ' .message-area').css('display', 'inline-block');
 			// console.log('targetUser : ' + targetUser + '  senderUser : '+senderUser);
-			$('#' + targetUser + ' .message-area,#' + senderUser + ' .message-area')
-				.prepend("<div style='margin:0'><span style='font-weight:bold;font-size:20px'>" + msg.user + "</span>" + " : <span style='font-size:17px'>" + msg.message + "</span><span style='float:right'>" + timestamp.local().format('YYYY-MM-DD, hh:mm a') + "</span></div><hr>");
+
+			/* handling message appearance into div */
+			console.log(user.replace(/\s+/g, '') + " : " + senderUser);
+			if ($('#' + targetUser + ' .message-area').parent().find('.header-text').text().replace(/\s+/g, '') == senderUser.replace(/\s+/g, '')) {
+				console.log('self chat');
+				$('#' + senderUser + ' .message-area')
+					.prepend("<div style='margin:0'><span style='font-weight:bold;font-size:20px'>" + msg.user + "</span>" + " : <span style='font-size:17px'>" + msg.message + "</span><span style='float:right'>" + timestamp.local().format('YYYY-MM-DD, hh:mm a') + "</span></div><hr>");
+
+
+			} else {
+				console.log('no self chat');
+				$('#' + targetUser + ' .message-area,#' + senderUser + ' .message-area')
+					.prepend("<div style='margin:0'><span style='font-weight:bold;font-size:20px'>" + msg.user + "</span>" + " : <span style='font-size:17px'>" + msg.message + "</span><span style='float:right'>" + timestamp.local().format('YYYY-MM-DD, hh:mm a') + "</span></div><hr>");
+			}
 
 		});
 

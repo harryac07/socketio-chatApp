@@ -80,13 +80,14 @@ io.on('connection', function(socket) {
 		var key = usernames.getKey(toUser);
 		// console.log(io.nsps['/'].adapter.rooms[room1].length);
 
-		io.to(key).to(socket.id).emit('private message', {
+		// io.to(key).to(socket.id).emit('private message', {
+		io.to(socket.id).to(key).emit('private message', {
 			message: msg,
 			user: socket.username,
 			toUser: toUser,
 			date: moment().valueOf() //date: moment(new Date()).format('YYYY-MM-DD, hh:mm a')
 		});
-		io.to(key).emit('notification',"You have text from "+socket.username+"<br>"+msg);
+		io.to(key).emit('notification', "You have text from " + socket.username + "<br>" + msg);
 
 	});
 

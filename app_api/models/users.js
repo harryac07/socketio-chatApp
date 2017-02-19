@@ -42,6 +42,12 @@ userSchema.methods.setPassword = function(password) {
 
 userSchema.methods.validPassword = function(password) { // validating submitted password
 	var hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
+	if(this.hash === hash){
+		console.log('password ok'); // testing purpose
+	}else{
+		console.log("password incorrect in user schema");
+	}
+	
 	return this.hash === hash;
 };
 userSchema.methods.generateJwt = function() {

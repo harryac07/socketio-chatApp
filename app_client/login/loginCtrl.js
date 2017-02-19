@@ -22,7 +22,7 @@ function loginCtrl($scope, $location, $window, auth) { // service as parameter
 				.login($scope.credentials)
 				.error(function(err) {
 					
-					$scope.formError = 'Please enter valid email or password.';
+					$scope.formError = 'Please enter valid email or password. <br>'+err;
 				})
 				.then(function() {
 					$window.location.href = '/';
