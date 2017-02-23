@@ -1,5 +1,5 @@
 angular
-	.module('productFinder')
+	.module('socketio')
 	.service('auth', auth);
 
 
@@ -60,6 +60,7 @@ function auth($http, $window, $location) {
 
 	var logout = function() {
 		$window.localStorage.removeItem('user-token');
+		
 	};
 
 	var facebookLogin = function(token) {// save the token when logged in with facebook

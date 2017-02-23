@@ -4,16 +4,17 @@ var jwt = require('jsonwebtoken');
 
 // create a schema
 var userSchema = new mongoose.Schema({
-	name: {
-		type: String,
-		required: true
-	},
+
 	email: {
 		type: String,
 		unique: true,
 		required: true
 	},
-	account:{
+	name: {
+		type: String,
+		required: true
+	},
+	account: {
 		type: String,
 		required: true
 	},
@@ -28,8 +29,8 @@ var userSchema = new mongoose.Schema({
 	verifyToken: {
 		type: String
 	},
-	tokenExpiryTime:{
-		type:Date
+	tokenExpiryTime: {
+		type: Date
 	},
 	hash: String,
 	salt: String
@@ -42,12 +43,12 @@ userSchema.methods.setPassword = function(password) {
 
 userSchema.methods.validPassword = function(password) { // validating submitted password
 	var hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
-	if(this.hash === hash){
+	if (this.hash === hash) {
 		console.log('password ok'); // testing purpose
-	}else{
+	} else {
 		console.log("password incorrect in user schema");
 	}
-	
+
 	return this.hash === hash;
 };
 userSchema.methods.generateJwt = function() {
@@ -59,10 +60,10 @@ userSchema.methods.generateJwt = function() {
 		email: this.email,
 		name: this.name,
 		admin: this.admin,
-		verified:this.verified,
+		verified: this.verified,
 		exp: parseInt(expiry.getTime() / 1000)
 	}, process.env.JWT_SECRET);
 };
 
 /* complile the schema into a model */
-module.exports =mongoose.model('User', userSchema); //'modelname' , 'schema name'
+module.exports = mongoose.model('User', userSchema); //'modelname' , 'schema name'

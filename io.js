@@ -1,5 +1,4 @@
-var app = require('express');
-var http = require('http').Server(app);
+var http = require('http').Server();
 var io = require('socket.io')(http);
 var moment = require('moment');
 var clients = 0; // for counting number of user connected
@@ -69,15 +68,23 @@ io.on('connection', function(socket) {
 	socket.on('private message', function(user, toUser, msg) {
 
 		console.log(socket.username + ' : to- ' + toUser + ' : ' + msg);
-		Object.prototype.getKey = function(value) {
-			for (var key in this) {
-				if (this[key] == value) {
-					return key;
-				}
+		// Object.prototype.getKey = function(value) {
+		// 	for (var key in this) {
+		// 		if (this[key] == value) {
+		// 			return key;
+		// 		}
+		// 	}
+		// 	return null;
+		// };
+		// var key = usernames.getKey(toUser);
+		function findKey(user) {
+			for (var key in usernames) {
+				if (usernames[key] == user) return key;
 			}
-			return null;
-		};
-		var key = usernames.getKey(toUser);
+			return false;
+		}
+		var key= findKey(toUser);
+		console.log(key);
 		// console.log(io.nsps['/'].adapter.rooms[room1].length);
 
 		// io.to(key).to(socket.id).emit('private message', {

@@ -1,5 +1,5 @@
 angular
-	.module('productFinder')
+	.module('socketio')
 	.controller('loginCtrl', loginCtrl);
 
 
@@ -21,8 +21,8 @@ function loginCtrl($scope, $location, $window, auth) { // service as parameter
 			auth
 				.login($scope.credentials)
 				.error(function(err) {
-					
-					$scope.formError = 'Please enter valid email or password. <br>'+err;
+					console.log(err);
+					$scope.formError = 'Please enter valid email or password.';
 				})
 				.then(function() {
 					$window.location.href = '/';

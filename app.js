@@ -5,8 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var passport = require('passport'); //Passport should be required before the database models
-var cloudinary = require('cloudinary'),
-  fs = require('fs');
+var fs = require('fs');
 require('./app_api/models/db'); // requiring db file
 require('./app_api/config/passport'); // configuration required after the database models
 

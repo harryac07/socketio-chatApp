@@ -2,22 +2,26 @@ var passport = require('passport');
 
 var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
-// load the auth variables
-var configAuth = require('./auth');
-
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
+// load the auth variables
+var configAuth = require('./auth');
 
 
 /* for local passport */
 passport.use(new LocalStrategy({
 		usernameField: 'email'
 	},
-	function(username, password, done) {
+	function(email, password, done) {
+		console.log('username in line 17 passport   : ' + email);
+		// Upto here, it gives email as a username successfully
 		User.findOne({
-			email: username
-		}, function(err, user) {
+			'email': email
+		},function(err, user) {
+			console.log("Object.prototype: ", Object.prototype);
 			if (err) {
+				// gives error here
+				console.log(err);
 				return done(err);
 			}
 			if (!user) {
@@ -37,7 +41,7 @@ passport.use(new LocalStrategy({
 ));
 
 /* facebook auth */
-passport.use(new FacebookStrategy({
+passport.use('facebook', new FacebookStrategy({
 
 		// pull in our app id and secret from our auth.js file
 		clientID: configAuth.facebookAuth.clientID,

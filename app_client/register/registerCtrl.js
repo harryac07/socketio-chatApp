@@ -1,5 +1,5 @@
 angular
-	.module('productFinder')
+	.module('socketio')
 	.controller('registerCtrl', registerCtrl);
 
 

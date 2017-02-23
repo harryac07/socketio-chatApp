@@ -1,5 +1,5 @@
   angular
-    .module('productFinder')
+    .module('socketio')
     .directive('navigation', navigation);
 
   function navigation () {

@@ -1,15 +1,15 @@
 angular
-	.module('productFinder')
+	.module('socketio')
 	.controller('homeCtrl', homeCtrl);
 
 
 function homeCtrl($scope, $routeParams, $location, auth) { // service as parameter(auth-authentication)
 
-	/* Socket starts here */
-	var socket = io('http://localhost:3000');
 
 	// check if user log in and only start chat
 	if (window.localStorage['user-token']) {
+		/* Socket starts here */ // only if user has logged In
+		var socket = io('http://localhost:3000');
 		var user = JSON.parse(window.atob(window.localStorage['user-token'].split('.')[1])).name;
 		// var room=user+Date.now(); // make unique room using date
 		var userList = []; // array to store online users
@@ -41,12 +41,12 @@ function homeCtrl($scope, $routeParams, $location, auth) { // service as paramet
 			/* private message */
 			setTimeout(function() {
 				/* Highlight current loggedIn user */
-				var required_user = new RegExp(user,"g");
+				var required_user = new RegExp(user, "g");
 				console.log(user);
 
-				$('#users p:contains("'+user+'")').each(function() {
+				$('#users p:contains("' + user + '")').each(function() {
 					$(this).html(
-						$(this).html().replace(user, '<span class="highlight">'+user+'</span>')
+						$(this).html().replace(user, '<span class="highlight">' + user + '</span>')
 					);
 				});
 				// $('#users p').css("color","red");
@@ -55,9 +55,7 @@ function homeCtrl($scope, $routeParams, $location, auth) { // service as paramet
 				var targetUser = "";
 				$.toUser = ""; // global variable to store userto name(user whom message is to be sent)
 				$('#users p').click(function(e) {
-
-
-
+					
 					$.toUser = $(this).text();
 
 					targetUser = $.toUser.replace(/\s+/g, '');
@@ -97,11 +95,9 @@ function homeCtrl($scope, $routeParams, $location, auth) { // service as paramet
 			});
 			$("div").on("focus", "#text2", function(event) {
 				/* gets the first ancestor element that matches the given selector '.user'*/
-
-
-
+				var toUser = ($(this).parent().closest('.user').find('.header-text').text());
 				$("div").on("keydown", "#text2", function(e) {
-					var toUser = ($(this).parent().closest('.user').find('.header-text').text());
+
 					console.log("to user : " + toUser);
 					if (e.which == 13) {
 						e.preventDefault();

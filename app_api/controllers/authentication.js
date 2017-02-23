@@ -6,7 +6,6 @@ var nodemailer = require('nodemailer');
 var host;
 var mailOptions;
 
-
 var sendJSONresponse = function(res, status, content) {
 	res.status(status);
 	res.json(content);
@@ -177,12 +176,12 @@ module.exports.forgotPwd = function(req, res) {
 				return;
 			} else {
 				/* Before sending user token, create a tokenExpiryTime for 1 hour. */
-				user.tokenExpiryTime=Date.now()+3600000;
-				user.save(function(err,user){ // save token expiry time for resetting password
-					if(err){
+				user.tokenExpiryTime = Date.now() + 3600000;
+				user.save(function(err, user) { // save token expiry time for resetting password
+					if (err) {
 						console.log(err);
 						return;
-					}else{
+					} else {
 						console.log(user);
 					}
 				});
@@ -230,7 +229,9 @@ module.exports.forgotPwd = function(req, res) {
 module.exports.resetpassword = function(req, res) {
 	User.findOne({
 			verifyToken: req.params.token, // if token matched with parameter
-			tokenExpiryTime:{ $gt: Date.now() } // if token is not expired or crossed 1 hour,
+			tokenExpiryTime: {
+				$gt: Date.now()
+			} // if token is not expired or crossed 1 hour,
 		})
 		.exec(function(err, user) {
 			if (err) {
@@ -247,7 +248,7 @@ module.exports.resetpassword = function(req, res) {
 				if (user.verifyToken === req.params.token) {
 
 					user.setPassword(req.body.password); // use setPassword method to set salt and hash
-					user.tokenExpiryTime=undefined; // set tokenexpiry time to be indefined. useful only for password reset
+					user.tokenExpiryTime = undefined; // set tokenexpiry time to be indefined. useful only for password reset
 					user.save(function(err, user) {
 						if (err) {
 							sendJSONresponse(res, 400, err);
@@ -256,9 +257,9 @@ module.exports.resetpassword = function(req, res) {
 							sendJSONresponse(res, 201, user);
 						}
 					});
-				}else{
-					sendJSONresponse(res,404,{
-						"message":"user not found with that email"
+				} else {
+					sendJSONresponse(res, 404, {
+						"message": "user not found with that email"
 					});
 					return;
 				}
@@ -276,11 +277,12 @@ module.exports.login = function(req, res) {
 		});
 		return;
 	}
+	console.log(req.body.email+" : "+req.body.password);
 
-	passport.authenticate('local', function(err, user, info) {
-		var token;
+	passport.authenticate('local',{session:false}, function(err, user, info) {
+		var token="";
+		console.log('user loginctrl : '+user);
 		if (err) {
-			
 			sendJSONresponse(res, 400, err);
 			return;
 		}
@@ -290,10 +292,10 @@ module.exports.login = function(req, res) {
 			sendJSONresponse(res, 200, {
 				"token": token
 			});
-			
+
 		} else {
 			sendJSONresponse(res, 401, info);
-			
+
 		}
 
 	})(req, res); // make sure that req, res are available to the passport
@@ -303,7 +305,7 @@ module.exports.login = function(req, res) {
 /* facebook Login */
 module.exports.facebookLogin = function(req, res) {
 
-	passport.authenticate('facebook', function(err, user, info) {
+	passport.authenticate('facebook',{session:false}, function(err, user, info) {
 		var token;
 		if (err) {
 			sendJSONresponse(res, 400, err);

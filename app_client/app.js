@@ -1,5 +1,5 @@
 angular
-	.module('productFinder', ['ngRoute', 'ngSanitize'])
+	.module('socketio', ['ngRoute', 'ngSanitize'])
 	.config(['$routeProvider', config]);
 
 function config($routeProvider) {

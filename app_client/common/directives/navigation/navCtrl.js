@@ -1,5 +1,5 @@
   angular
-    .module('productFinder')
+    .module('socketio')
     .controller('navCtrl', navCtrl);
 
   function navCtrl($scope, $location, $window, auth) {
@@ -11,7 +11,7 @@
 
     $scope.logout = function() {
       auth.logout();
-      $window.location.reload();
+      $window.location.reload(true);
     };
 
   }
